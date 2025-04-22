@@ -37,7 +37,7 @@ const Index = () => {
               </div>
               <div className="md:w-1/2 flex justify-center md:justify-end relative">
                 <img 
-                  src="https://i.pravatar.cc/400?img=8" 
+                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
                   alt="Studente che usa MiJob" 
                   className="rounded-lg shadow-xl max-w-full md:max-w-md object-cover animate-fade-in"
                 />
