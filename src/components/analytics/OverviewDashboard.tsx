@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, PieChart, LineChart } from '@/components/analytics/Charts';
+import { BarChart, PieChartComponent, LineChart } from '@/components/analytics/Charts';
 import { getAnalyticsData } from '@/lib/analytics';
 import { Users, Activity, Clock, Smartphone, MapPin } from 'lucide-react';
 
@@ -74,7 +74,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ period }) 
             <CardTitle>Dispositivi Utilizzati</CardTitle>
           </CardHeader>
           <CardContent>
-            <PieChart data={deviceData.devices} />
+            <PieChartComponent data={deviceData.devices} />
           </CardContent>
         </Card>
         

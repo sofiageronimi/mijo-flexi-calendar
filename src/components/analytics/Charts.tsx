@@ -14,7 +14,6 @@ import {
   Cell,
   Legend,
   CartesianGrid,
-  PieChart,
   PieLabel,
 } from 'recharts';
 
@@ -139,11 +138,11 @@ export const BarChart: React.FC<BarChartProps> = ({ data }) => {
   );
 };
 
-interface PieChartProps {
+interface PieChartComponentProps {
   data: ChartData[];
 }
 
-export const PieChart: React.FC<PieChartProps> = ({ data }) => {
+export const PieChartComponent: React.FC<PieChartComponentProps> = ({ data }) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <RechartsPieChart>
@@ -169,7 +168,11 @@ export const PieChart: React.FC<PieChartProps> = ({ data }) => {
             border: 'none',
             padding: '10px'
           }}
-          formatter={(value, name) => [`${value} (${((value / data.reduce((acc, item) => acc + item.value, 0)) * 100).toFixed(1)}%)`, name]}
+          formatter={(value, name) => {
+            const total = data.reduce((acc, item) => acc + item.value, 0);
+            const percentage = ((Number(value) / total) * 100).toFixed(1);
+            return [`${value} (${percentage}%)`, name];
+          }}
         />
         <Legend />
       </RechartsPieChart>

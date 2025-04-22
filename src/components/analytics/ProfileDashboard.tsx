@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, PieChart, LineChart } from '@/components/analytics/Charts';
+import { BarChart, PieChartComponent, LineChart } from '@/components/analytics/Charts';
 import { getAnalyticsData } from '@/lib/analytics';
 
 interface ProfileDashboardProps {
@@ -69,7 +69,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({ period }) =>
             <CardTitle>Sezioni Profilo Modificate</CardTitle>
           </CardHeader>
           <CardContent>
-            <PieChart data={profileData.updatedSections} />
+            <PieChartComponent data={profileData.updatedSections} />
           </CardContent>
         </Card>
         

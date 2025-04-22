@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, PieChart, LineChart } from '@/components/analytics/Charts';
+import { BarChart, PieChartComponent, LineChart } from '@/components/analytics/Charts';
 import { getAnalyticsData } from '@/lib/analytics';
 
 interface CalendarDashboardProps {
@@ -69,7 +69,7 @@ export const CalendarDashboard: React.FC<CalendarDashboardProps> = ({ period }) 
             <CardTitle>Distribuzione Fasce Orarie</CardTitle>
           </CardHeader>
           <CardContent>
-            <PieChart data={calendarData.timeSlotDistribution} />
+            <PieChartComponent data={calendarData.timeSlotDistribution} />
           </CardContent>
         </Card>
         
