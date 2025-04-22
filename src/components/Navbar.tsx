@@ -62,7 +62,7 @@ const Navbar = () => {
           )}
           <Link to="/calendar">
             <Button className="bg-mijob-orange hover:bg-mijob-orange/90">
-              Inizia ora
+              Crea il Tuo Calendario!
             </Button>
           </Link>
         </div>
@@ -138,7 +138,7 @@ const Navbar = () => {
             )}
             <Link to="/calendar" onClick={() => setIsMenuOpen(false)}>
               <Button className="w-full bg-mijob-orange hover:bg-mijob-orange/90">
-                Inizia ora
+                Crea il Tuo Calendario!
               </Button>
             </Link>
           </div>

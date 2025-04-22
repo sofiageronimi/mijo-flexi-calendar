@@ -1,4 +1,3 @@
-
 import { JobCategory, JobListing, TimeSlot, TeamMember } from "./types";
 
 export const jobCategories: { id: JobCategory; label: string; icon: string }[] = [
@@ -215,7 +214,25 @@ export const mockUser = {
   ],
 };
 
+// Authentication helper functions
 export const isAuthenticated = (): boolean => {
-  // In a real app, check localStorage/sessionStorage or cookies for auth token
-  return false; // For demo purposes, default to not authenticated
+  return localStorage.getItem('mijob_authenticated') === 'true';
+};
+
+export const getCurrentUser = () => {
+  const userString = localStorage.getItem('mijob_user');
+  if (userString) {
+    try {
+      return JSON.parse(userString);
+    } catch (error) {
+      console.error("Error parsing user data", error);
+      return null;
+    }
+  }
+  return null;
+};
+
+export const logout = () => {
+  localStorage.removeItem('mijob_authenticated');
+  localStorage.removeItem('mijob_user');
 };

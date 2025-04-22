@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,7 @@ const Index = () => {
                 <div className="mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                   <Link to="/calendar">
                     <Button size="lg" className="bg-mijob-orange hover:bg-mijob-orange/90 text-white px-8">
-                      Inizia ora
+                      Crea il Tuo Calendario!
                     </Button>
                   </Link>
                   <Link to="/jobs">
@@ -92,7 +91,7 @@ const Index = () => {
             <div className="text-center mt-12">
               <Link to="/calendar">
                 <Button className="bg-mijob-blue hover:bg-mijob-blue/90 text-white px-8">
-                  Crea il tuo calendario
+                  Crea il Tuo Calendario!
                 </Button>
               </Link>
             </div>
@@ -234,7 +233,7 @@ const Index = () => {
             </p>
             <Link to="/calendar">
               <Button size="lg" className="bg-white text-mijob-lavender hover:bg-white/90 px-8">
-                Crea il tuo calendario
+                Crea il Tuo Calendario!
               </Button>
             </Link>
           </div>

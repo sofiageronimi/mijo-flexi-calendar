@@ -8,18 +8,44 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [registerFirstName, setRegisterFirstName] = useState('');
+  const [registerLastName, setRegisterLastName] = useState('');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  
   const navigate = useNavigate();
   
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!loginEmail || !loginPassword) {
+      toast({
+        title: "Errore",
+        description: "Inserisci email e password",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
     
     // Simulate API call
     setTimeout(() => {
+      // Save authentication state to localStorage
+      localStorage.setItem('mijob_authenticated', 'true');
+      localStorage.setItem('mijob_user', JSON.stringify({
+        email: loginEmail,
+        name: 'Utente MiJob',
+      }));
+      
       setLoading(false);
       toast({
         title: "Accesso effettuato",
@@ -31,10 +57,45 @@ const Auth = () => {
   
   const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!registerFirstName || !registerLastName || !registerEmail || !registerPassword || !confirmPassword) {
+      toast({
+        title: "Errore",
+        description: "Compila tutti i campi richiesti",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (registerPassword !== confirmPassword) {
+      toast({
+        title: "Errore",
+        description: "Le password non coincidono",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!agreeTerms) {
+      toast({
+        title: "Errore",
+        description: "Devi accettare i termini di servizio e l'informativa sulla privacy",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
     
     // Simulate API call
     setTimeout(() => {
+      // Save authentication state to localStorage
+      localStorage.setItem('mijob_authenticated', 'true');
+      localStorage.setItem('mijob_user', JSON.stringify({
+        email: registerEmail,
+        name: `${registerFirstName} ${registerLastName}`,
+      }));
+      
       setLoading(false);
       toast({
         title: "Registrazione completata",
@@ -68,7 +129,14 @@ const Auth = () => {
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="La tua email" required />
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="La tua email" 
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
+                        required 
+                      />
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -77,7 +145,14 @@ const Auth = () => {
                           Password dimenticata?
                         </a>
                       </div>
-                      <Input id="password" type="password" placeholder="La tua password" required />
+                      <Input 
+                        id="password" 
+                        type="password" 
+                        placeholder="La tua password" 
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        required 
+                      />
                     </div>
                     <Button className="w-full" type="submit" disabled={loading}>
                       {loading ? "Accesso in corso..." : "Accedi"}
@@ -141,24 +216,57 @@ const Auth = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">Nome</Label>
-                        <Input id="firstName" placeholder="Il tuo nome" required />
+                        <Input 
+                          id="firstName" 
+                          placeholder="Il tuo nome" 
+                          value={registerFirstName}
+                          onChange={(e) => setRegisterFirstName(e.target.value)}
+                          required 
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="lastName">Cognome</Label>
-                        <Input id="lastName" placeholder="Il tuo cognome" required />
+                        <Input 
+                          id="lastName" 
+                          placeholder="Il tuo cognome" 
+                          value={registerLastName}
+                          onChange={(e) => setRegisterLastName(e.target.value)}
+                          required 
+                        />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="La tua email" required />
+                      <Label htmlFor="registerEmail">Email</Label>
+                      <Input 
+                        id="registerEmail" 
+                        type="email" 
+                        placeholder="La tua email" 
+                        value={registerEmail}
+                        onChange={(e) => setRegisterEmail(e.target.value)}
+                        required 
+                      />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" placeholder="Crea una password" required />
+                      <Label htmlFor="registerPassword">Password</Label>
+                      <Input 
+                        id="registerPassword" 
+                        type="password" 
+                        placeholder="Crea una password" 
+                        value={registerPassword}
+                        onChange={(e) => setRegisterPassword(e.target.value)}
+                        required 
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="confirmPassword">Conferma password</Label>
-                      <Input id="confirmPassword" type="password" placeholder="Conferma la password" required />
+                      <Input 
+                        id="confirmPassword" 
+                        type="password" 
+                        placeholder="Conferma la password" 
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required 
+                      />
                     </div>
                     
                     <div className="flex items-center space-x-2">
@@ -166,6 +274,8 @@ const Auth = () => {
                         type="checkbox"
                         id="terms"
                         className="rounded border-gray-300 text-mijob-blue focus:ring-mijob-blue"
+                        checked={agreeTerms}
+                        onChange={(e) => setAgreeTerms(e.target.checked)}
                         required
                       />
                       <label htmlFor="terms" className="text-sm text-gray-600">
