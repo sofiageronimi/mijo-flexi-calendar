@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DayAvailability, JobCategory, JobListing } from '@/lib/types';
 import { mockJobs, isAuthenticated } from '@/lib/data';
 import { toast } from '@/hooks/use-toast';
+import { trackPageView, trackEvent, trackCalendarCreation } from '@/lib/analytics';
 
 const Calendar = () => {
   const [generatedCalendar, setGeneratedCalendar] = useState<JobListing[]>([]);
@@ -21,6 +22,9 @@ const Calendar = () => {
   const authenticated = isAuthenticated();
   
   useEffect(() => {
+    // Track page view
+    trackPageView('Calendar');
+    
     if (!authenticated) {
       toast({
         title: "Accesso richiesto",
@@ -37,6 +41,13 @@ const Calendar = () => {
     preferredCategories: JobCategory[];
   }) => {
     // In a real app, this would make an API call to generate a personalized calendar
+    
+    // Track calendar creation event
+    trackCalendarCreation(
+      formData.availability.length,
+      formData.availability.reduce((total, day) => total + day.availableSlots.length, 0),
+      formData.monthlyGoal
+    );
     
     // Mock implementation: filter jobs based on preferences and availability
     const availableDates = formData.availability.map(a => a.date);
@@ -67,6 +78,9 @@ const Calendar = () => {
     setEstimatedEarnings(totalEarnings);
     setShowCalendar(true);
     
+    // Track successful calendar generation
+    trackEvent('Calendar', 'Generate', 'Success', filteredJobs.length);
+    
     toast({
       title: "Calendario generato",
       description: `Abbiamo trovato ${filteredJobs.length} opportunità in base alle tue preferenze.`,
@@ -76,7 +90,16 @@ const Calendar = () => {
   const resetCalendar = () => {
     setShowCalendar(false);
     setGeneratedCalendar([]);
+    trackEvent('Calendar', 'Reset', 'User initiated');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  const handleJobApplication = (jobId: string) => {
+    trackEvent('Calendar', 'Apply', jobId);
+    toast({
+      title: "Candidatura inviata",
+      description: "La tua candidatura è stata inviata con successo.",
+    });
   };
   
   if (!authenticated) {
@@ -183,7 +206,11 @@ const Calendar = () => {
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-mijob-orange">{job.hourlyRate}€/ora</p>
-                                <Button size="sm" className="mt-2">
+                                <Button 
+                                  size="sm" 
+                                  className="mt-2"
+                                  onClick={() => handleJobApplication(job.id)}
+                                >
                                   Candidati
                                 </Button>
                               </div>
