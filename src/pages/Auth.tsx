@@ -103,8 +103,17 @@ const Auth = () => {
       localStorage.setItem('mijob_authenticated', 'true');
       localStorage.setItem('mijob_user', JSON.stringify(userData));
       
-      // Track registration event
-      trackEvent('auth', 'registration', registerEmail);
+      // Push registration event to dataLayer
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'registrazione_completata',
+          user_registration_data: {
+            nome: registerFirstName,
+            cognome: registerLastName,
+            email: registerEmail
+          }
+        });
+      }
       
       setLoading(false);
       toast({
