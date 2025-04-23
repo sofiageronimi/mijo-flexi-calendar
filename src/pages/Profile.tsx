@@ -12,6 +12,7 @@ import JobCard from '@/components/JobCard';
 import CalendarGrid from '@/components/CalendarGrid';
 import { mockUser, isAuthenticated, jobCategories } from '@/lib/data';
 import { toast } from '@/hooks/use-toast';
+import { Calendar } from "@/components/ui/calendar";
 
 const Profile = () => {
   const [examMode, setExamMode] = useState(false);
@@ -149,7 +150,10 @@ const Profile = () => {
                         <CardTitle>Il mio calendario</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <CalendarGrid month={new Date()} jobs={mockUser.upcomingJobs} />
+                        <CalendarGrid 
+                          month={new Date()} 
+                          jobs={mockUser.upcomingJobs} 
+                        />
                       </CardContent>
                     </Card>
                   </TabsContent>
