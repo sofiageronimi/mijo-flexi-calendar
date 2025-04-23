@@ -1,4 +1,3 @@
-
 import { JobCategory } from './types';
 
 // Mock data generator for analytics dashboards
@@ -255,23 +254,76 @@ export const getAnalyticsData = (period: string) => {
   };
 };
 
-// Tracking functions - in a real app these would send data to an analytics service
+// Tracking functions - integrated with Google Tag Manager
 export const trackPageView = (pageName: string) => {
   console.log(`Analytics: Page view - ${pageName}`);
+  
+  // Push data to GTM dataLayer
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'pageView',
+      pageName: pageName
+    });
+  }
 };
 
 export const trackEvent = (category: string, action: string, label?: string, value?: number) => {
   console.log(`Analytics: Event - ${category} / ${action} / ${label || 'N/A'} / ${value || 'N/A'}`);
+  
+  // Push event data to GTM dataLayer
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'customEvent',
+      eventCategory: category,
+      eventAction: action,
+      eventLabel: label || undefined,
+      eventValue: value || undefined
+    });
+  }
 };
 
 export const trackConversion = (stage: string) => {
   console.log(`Analytics: Funnel conversion - ${stage}`);
+  
+  // Push conversion data to GTM dataLayer
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'conversion',
+      conversionStage: stage
+    });
+  }
 };
 
 export const trackJobInteraction = (jobId: string, action: 'view' | 'click' | 'apply') => {
   console.log(`Analytics: Job interaction - ${jobId} / ${action}`);
+  
+  // Push job interaction data to GTM dataLayer
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'jobInteraction',
+      jobId: jobId,
+      interactionType: action
+    });
+  }
 };
 
 export const trackCalendarCreation = (availability: number, timeSlots: number, goal: number) => {
   console.log(`Analytics: Calendar creation - Days: ${availability}, Slots: ${timeSlots}, Goal: €${goal}`);
+  
+  // Push calendar creation data to GTM dataLayer
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'calendarCreation',
+      daysAvailable: availability,
+      timeSlots: timeSlots,
+      economicGoal: goal
+    });
+  }
 };
+
+// Add TypeScript interface to global Window object
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
