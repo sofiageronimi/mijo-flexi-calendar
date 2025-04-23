@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -16,11 +15,11 @@ import { toast } from '@/hooks/use-toast';
 
 const Profile = () => {
   const [examMode, setExamMode] = useState(false);
+  const [userData, setUserData] = useState<{ name: string; email: string } | null>(null);
   const navigate = useNavigate();
   const authenticated = isAuthenticated();
   
-  // Redirect if not authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (!authenticated) {
       toast({
         title: "Accesso negato",
@@ -28,6 +27,15 @@ const Profile = () => {
         variant: "destructive",
       });
       navigate('/auth');
+    } else {
+      const userString = localStorage.getItem('mijob_user');
+      if (userString) {
+        try {
+          setUserData(JSON.parse(userString));
+        } catch (error) {
+          console.error("Error parsing user data", error);
+        }
+      }
     }
   }, [authenticated, navigate]);
   
@@ -41,8 +49,8 @@ const Profile = () => {
     });
   };
   
-  if (!authenticated) {
-    return null; // Will redirect via useEffect
+  if (!authenticated || !userData) {
+    return null;
   }
   
   return (
@@ -60,15 +68,11 @@ const Profile = () => {
                 <Card className="mb-8">
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center">
-                      <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
-                        <img 
-                          src={mockUser.profilePicture} 
-                          alt={mockUser.name} 
-                          className="w-full h-full object-cover"
-                        />
+                      <div className="w-24 h-24 rounded-full bg-mijob-blue/10 flex items-center justify-center mb-4">
+                        <span className="text-3xl">{userData.name.charAt(0)}</span>
                       </div>
-                      <h2 className="text-xl font-semibold">{mockUser.name}</h2>
-                      <p className="text-gray-600 text-sm mb-4">{mockUser.email}</p>
+                      <h2 className="text-xl font-semibold">{userData.name}</h2>
+                      <p className="text-gray-600 text-sm mb-4">{userData.email}</p>
                       
                       <div className="w-full mt-4">
                         <div className="flex items-center justify-between mb-6">

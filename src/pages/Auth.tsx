@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { trackEvent } from '@/lib/analytics';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -39,12 +39,17 @@ const Auth = () => {
     
     // Simulate API call
     setTimeout(() => {
-      // Save authentication state to localStorage
-      localStorage.setItem('mijob_authenticated', 'true');
-      localStorage.setItem('mijob_user', JSON.stringify({
+      // Save user data to localStorage
+      const userData = {
         email: loginEmail,
         name: 'Utente MiJob',
-      }));
+      };
+      
+      localStorage.setItem('mijob_authenticated', 'true');
+      localStorage.setItem('mijob_user', JSON.stringify(userData));
+      
+      // Track login event
+      trackEvent('auth', 'login', loginEmail);
       
       setLoading(false);
       toast({
@@ -89,12 +94,17 @@ const Auth = () => {
     
     // Simulate API call
     setTimeout(() => {
-      // Save authentication state to localStorage
-      localStorage.setItem('mijob_authenticated', 'true');
-      localStorage.setItem('mijob_user', JSON.stringify({
+      // Save user data to localStorage
+      const userData = {
         email: registerEmail,
         name: `${registerFirstName} ${registerLastName}`,
-      }));
+      };
+      
+      localStorage.setItem('mijob_authenticated', 'true');
+      localStorage.setItem('mijob_user', JSON.stringify(userData));
+      
+      // Track registration event
+      trackEvent('auth', 'registration', registerEmail);
       
       setLoading(false);
       toast({

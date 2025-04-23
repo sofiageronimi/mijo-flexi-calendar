@@ -1,13 +1,25 @@
-
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
-import { isAuthenticated } from '@/lib/data';
+import { Menu, X, LogOut } from 'lucide-react';
+import { isAuthenticated, logout } from '@/lib/data';
+import { toast } from '@/hooks/use-toast';
+import { trackEvent } from '@/lib/analytics';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const authenticated = isAuthenticated();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    trackEvent('auth', 'logout');
+    toast({
+      title: "Logout effettuato",
+      description: "Hai effettuato il logout con successo",
+    });
+    navigate('/');
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -22,7 +34,6 @@ const Navbar = () => {
           </Link>
         </div>
         
-        {/* Desktop Menu */}
         <div className="hidden md:flex md:items-center md:space-x-6">
           <Link to="/" className="font-medium text-gray-700 hover:text-mijob-blue transition-colors">
             Home
@@ -46,13 +57,23 @@ const Navbar = () => {
           </Link>
         </div>
         
-        <div className="hidden md:block">
+        <div className="hidden md:flex md:items-center">
           {authenticated ? (
-            <Link to="/profile">
-              <Button variant="outline" className="mr-2">
-                Il mio profilo
+            <>
+              <Link to="/profile">
+                <Button variant="outline" className="mr-2">
+                  Il mio profilo
+                </Button>
+              </Link>
+              <Button 
+                variant="ghost" 
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
               </Button>
-            </Link>
+            </>
           ) : (
             <Link to="/auth">
               <Button variant="outline" className="mr-2">
@@ -67,7 +88,6 @@ const Navbar = () => {
           </Link>
         </div>
         
-        {/* Mobile menu button */}
         <div className="md:hidden flex items-center">
           <button onClick={toggleMenu} className="text-gray-600 focus:outline-none">
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -75,7 +95,6 @@ const Navbar = () => {
         </div>
       </div>
       
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden pt-2 pb-4 px-4 space-y-3 animate-fade-in">
           <Link 
@@ -124,11 +143,24 @@ const Navbar = () => {
           </Link>
           <div className="pt-2 flex flex-col space-y-2">
             {authenticated ? (
-              <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="outline" className="w-full">
-                  Il mio profilo
+              <>
+                <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="outline" className="w-full">
+                    Il mio profilo
+                  </Button>
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
                 </Button>
-              </Link>
+              </>
             ) : (
               <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                 <Button variant="outline" className="w-full">
