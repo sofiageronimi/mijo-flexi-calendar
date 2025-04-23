@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Sparkles } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -10,40 +11,45 @@ const Index = () => {
       <Navbar />
       
       <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-mijob-blue via-blue-500 to-mijob-lavender text-white py-16 md:py-24">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="md:w-1/2 mb-10 md:mb-0">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight animate-fade-in">
-                  Hai un'ora libera?<br />
-                  <span className="text-white/90">Falla fruttare.</span>
-                </h1>
-                <p className="mt-6 text-xl text-white/80 max-w-lg">
-                  Trova lavoretti flessibili che si adattano al tuo orario universitario e alle tue esigenze. MiJob crea un calendario personalizzato in base a disponibilità, preferenze e obiettivi.
-                </p>
-                <div className="mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                  <Link to="/calendar">
-                    <Button size="lg" className="bg-mijob-orange hover:bg-mijob-orange/90 text-white px-8">
-                      Crea il Tuo Calendario!
-                    </Button>
-                  </Link>
-                  <Link to="/jobs">
-                    <Button size="lg" variant="outline" className="border-white text-white bg-transparent hover:bg-white/10 px-8">
-                      Esplora offerte
-                    </Button>
-                  </Link>
-                </div>
+        {/* Hero Section with Gradient */}
+        <section className="bg-gradient-to-br from-mijob-blue via-blue-500 to-mijob-lavender text-white py-20 md:py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[linear-gradient(60deg,_#abecd6_0%,_#fbed96_100%)] opacity-10"></div>
+          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative">
+            <div className="text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight animate-fade-in bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                Hai un'ora libera?<br />
+                <span className="text-white/90">Falla fruttare.</span>
+              </h1>
+              <p className="mt-6 text-xl text-white/80 max-w-2xl mx-auto animate-fade-in delay-100">
+                Trova lavoretti flessibili che si adattano al tuo orario universitario e alle tue esigenze. MiJob crea un calendario personalizzato in base a disponibilità, preferenze e obiettivi.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in delay-200">
+                <Link to="/calendar">
+                  <Button size="lg" className="bg-mijob-orange hover:bg-mijob-orange/90 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                    <Sparkles className="mr-2" />
+                    Crea il Tuo Calendario!
+                  </Button>
+                </Link>
+                <Link to="/jobs">
+                  <Button size="lg" variant="outline" className="border-2 border-white text-white bg-transparent hover:bg-white/10 px-8 py-6 text-lg">
+                    Esplora offerte
+                  </Button>
+                </Link>
               </div>
-              <div className="md:w-1/2 flex justify-center md:justify-end relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-                  alt="Studente che usa MiJob" 
-                  className="rounded-lg shadow-xl max-w-full md:max-w-md object-cover animate-fade-in"
-                />
-                <div className="absolute -bottom-5 right-5 bg-white p-3 rounded-lg shadow-lg animate-slide-in">
-                  <div className="text-black font-medium">Guadagno di Maria questo mese</div>
-                  <div className="text-2xl font-bold text-mijob-orange mt-1">€520,00</div>
+              
+              {/* Stats Section */}
+              <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div className="bg-white/10 backdrop-blur-lg rounded-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                  <div className="text-3xl font-bold text-white">500+</div>
+                  <div className="text-white/80 mt-2">Studenti Attivi</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-lg rounded-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                  <div className="text-3xl font-bold text-white">€15/h</div>
+                  <div className="text-white/80 mt-2">Media Guadagno</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-lg rounded-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                  <div className="text-3xl font-bold text-white">1000+</div>
+                  <div className="text-white/80 mt-2">Offerte Disponibili</div>
                 </div>
               </div>
             </div>
@@ -99,71 +105,51 @@ const Index = () => {
         </section>
         
         {/* Benefits Section */}
-        <section className="py-16">
+        <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center">
-              <div className="md:w-1/2 mb-8 md:mb-0 md:pr-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">Perché scegliere MiJob?</h2>
-                <ul className="space-y-4">
-                  <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-mijob-blue/10 text-mijob-blue rounded-full flex items-center justify-center mr-3">
-                      <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Flessibilità totale</h3>
-                      <p className="text-gray-600">Lavora solo quando sei disponibile, adattando gli impegni allo studio.</p>
-                    </div>
-                  </li>
-                  <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-mijob-orange/10 text-mijob-orange rounded-full flex items-center justify-center mr-3">
-                      <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Piani personalizzati</h3>
-                      <p className="text-gray-600">Calendario creato su misura in base ai tuoi obiettivi e preferenze.</p>
-                    </div>
-                  </li>
-                  <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-mijob-lavender/10 text-mijob-lavender rounded-full flex items-center justify-center mr-3">
-                      <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Opportunità verificate</h3>
-                      <p className="text-gray-600">Solo offerte di qualità, affidabili e adatte a studenti universitari.</p>
-                    </div>
-                  </li>
-                  <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-3">
-                      <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Modalità Esami</h3>
-                      <p className="text-gray-600">Riduci automaticamente gli impegni durante i periodi di esame.</p>
-                    </div>
-                  </li>
-                </ul>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-mijob-blue to-mijob-lavender bg-clip-text text-transparent">
+                Perché scegliere MiJob?
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                La piattaforma ideale per studenti che vogliono guadagnare senza compromettere lo studio.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-12 h-12 bg-mijob-blue/10 text-mijob-blue rounded-full flex items-center justify-center mb-4">
+                  <Sparkles />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Flessibilità totale</h3>
+                <p className="text-gray-600">Lavora solo quando sei disponibile, adattando gli impegni allo studio.</p>
               </div>
-              <div className="md:w-1/2">
-                <img 
-                  src="https://i.pravatar.cc/400?img=9" 
-                  alt="Studenti che utilizzano MiJob" 
-                  className="rounded-lg shadow-lg w-full" 
-                />
+              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-12 h-12 bg-mijob-orange/10 text-mijob-orange rounded-full flex items-center justify-center mb-4">
+                  <Sparkles />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Piani personalizzati</h3>
+                <p className="text-gray-600">Calendario creato su misura in base ai tuoi obiettivi e preferenze.</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-12 h-12 bg-mijob-lavender/10 text-mijob-lavender rounded-full flex items-center justify-center mb-4">
+                  <Sparkles />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Opportunità verificate</h3>
+                <p className="text-gray-600">Solo offerte di qualità, affidabili e adatte a studenti universitari.</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                  <Sparkles />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Modalità Esami</h3>
+                <p className="text-gray-600">Riduci automaticamente gli impegni durante i periodi di esame.</p>
               </div>
             </div>
           </div>
         </section>
         
-        {/* Testimonials */}
-        <section className="py-16 bg-gray-50">
+        {/* Testimonials Section */}
+        <section className="py-16 bg-gradient-to-br from-mijob-lavender/5 to-mijob-blue/5">
           <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Gli studenti parlano di noi</h2>
@@ -225,14 +211,15 @@ const Index = () => {
         </section>
         
         {/* CTA Section */}
-        <section className="py-16 bg-mijob-lavender">
+        <section className="py-16 bg-gradient-to-br from-mijob-lavender to-mijob-blue text-white">
           <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Pronto a trasformare il tuo tempo libero?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Pronto a trasformare il tuo tempo libero?</h2>
             <p className="text-xl text-white/80 max-w-2xl mx-auto mb-8">
               Crea il tuo calendario personalizzato e inizia a guadagnare in modo intelligente.
             </p>
             <Link to="/calendar">
-              <Button size="lg" className="bg-white text-mijob-lavender hover:bg-white/90 px-8">
+              <Button size="lg" className="bg-white text-mijob-lavender hover:bg-white/90 px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                <Sparkles className="mr-2" />
                 Crea il Tuo Calendario!
               </Button>
             </Link>
