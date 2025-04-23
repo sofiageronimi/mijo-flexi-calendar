@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobListing } from '@/lib/types';
@@ -85,6 +86,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
                     {dayJobs.map((job) => {
                       const timeSlot = timeSlots.find(slot => slot.id === job.timeSlot);
                       const categoryColor = categoryColors[job.category] || categoryColors.other;
+                      const durationText = job.duration === 1 ? 'ora' : 'ore';
                       
                       return (
                         <div
@@ -93,7 +95,8 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
                           title={`${job.title} - ${job.company} - ${job.hourlyRate}€/ora`}
                         >
                           <div className="font-medium truncate">{job.title}</div>
-                          <div>{timeSlot?.timeRange} • {job.hourlyRate}€/h</div>
+                          <div>{timeSlot?.timeRange} • {job.duration} {durationText} • {job.hourlyRate}€/h</div>
+                          <div className="truncate text-[10px]">{job.company}</div>
                         </div>
                       );
                     })}
@@ -113,3 +116,4 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
 };
 
 export default CalendarGrid;
+
