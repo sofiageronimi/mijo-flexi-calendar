@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobListing } from '@/lib/types';
@@ -63,7 +62,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
           
           <div className="grid grid-cols-7">
             {Array.from({ length: startOffset }).map((_, index) => (
-              <div key={`empty-start-${index}`} className="min-h-[100px] p-1 border-t border-r"></div>
+              <div key={`empty-start-${index}`} className="min-h-[120px] p-1 border-t border-r"></div>
             ))}
             
             {days.map((day) => {
@@ -74,7 +73,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
               return (
                 <div
                   key={dateString}
-                  className={`min-h-[100px] p-1 border-t border-r relative ${
+                  className={`min-h-[120px] p-1 border-t border-r relative ${
                     isToday ? 'bg-mijob-blue/5' : ''
                   }`}
                 >
@@ -106,7 +105,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
             })}
             
             {Array.from({ length: (7 - ((days.length + startOffset) % 7)) % 7 }).map((_, index) => (
-              <div key={`empty-end-${index}`} className="min-h-[100px] p-1 border-t border-r"></div>
+              <div key={`empty-end-${index}`} className="min-h-[120px] p-1 border-t border-r"></div>
             ))}
           </div>
         </CardContent>
@@ -116,4 +115,3 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
 };
 
 export default CalendarGrid;
-
