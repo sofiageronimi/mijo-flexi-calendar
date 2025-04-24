@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -108,7 +107,7 @@ const JobDetail = () => {
             <div className="flex flex-col md:flex-row gap-4">
               <a href={job.applicationUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
                 <Button className="w-full bg-mijob-orange hover:bg-mijob-orange/90">
-                  Candidati ora
+                  Vai al sito d'origine
                 </Button>
               </a>
               <Link to="/calendar" className="flex-1">
