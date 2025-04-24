@@ -1,6 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { JobListing } from '@/lib/types';
 import { timeSlots } from '@/lib/data';
 
@@ -9,7 +11,21 @@ interface CalendarGridProps {
   jobs: JobListing[];
 }
 
-const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
+const CalendarGrid: React.FC<CalendarGridProps> = ({ month: initialMonth, jobs }) => {
+  const [currentMonth, setCurrentMonth] = useState(initialMonth);
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    setCurrentMonth(prevMonth => {
+      const newMonth = new Date(prevMonth);
+      if (direction === 'next') {
+        newMonth.setMonth(newMonth.getMonth() + 1);
+      } else {
+        newMonth.setMonth(newMonth.getMonth() - 1);
+      }
+      return newMonth;
+    });
+  };
+
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -24,9 +40,9 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
     return days;
   };
   
-  const days = getDaysInMonth(month);
+  const days = getDaysInMonth(currentMonth);
   
-  const firstDayOfMonth = new Date(month.getFullYear(), month.getMonth(), 1).getDay();
+  const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
   const startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
   
   const formatDate = (date: Date) => {
@@ -46,15 +62,33 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
 
   // Debug logs
   console.log("CalendarGrid received jobs:", jobs);
-  console.log("Month:", month);
+  console.log("Month:", currentMonth);
 
   return (
     <div className="mt-6">
       <Card className="border rounded-lg overflow-hidden">
         <CardHeader className="bg-gray-50 border-b">
-          <CardTitle className="text-xl">
-            {month.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })}
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigateMonth('prev')}
+              className="h-8 w-8"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <CardTitle className="text-xl">
+              {currentMonth.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })}
+            </CardTitle>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigateMonth('next')}
+              className="h-8 w-8"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="grid grid-cols-7 text-sm">
@@ -113,7 +147,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
                         );
                       })
                     ) : (
-                      // This message will only appear for days with no jobs
                       <div className="text-[10px] text-gray-400 text-center mt-2">
                         Nessun lavoro
                       </div>
@@ -134,3 +167,4 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
 };
 
 export default CalendarGrid;
+
