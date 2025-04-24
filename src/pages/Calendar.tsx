@@ -24,7 +24,6 @@ const Calendar = () => {
   const authenticated = isAuthenticated();
   
   useEffect(() => {
-    // Track page view
     trackPageView('Calendar');
     
     if (!authenticated) {
@@ -37,50 +36,113 @@ const Calendar = () => {
     }
   }, [authenticated, navigate]);
   
+  const generateJobFromTemplate = (date: string, timeSlot: string, preferredCategories: JobCategory[]) => {
+    const randomCategory = preferredCategories[Math.floor(Math.random() * preferredCategories.length)];
+    
+    const jobTemplates: Record<JobCategory, Partial<JobListing>> = {
+      hospitality: {
+        title: "Cameriere per evento",
+        company: "CateringMi",
+        description: "Servizio catering per evento aziendale o privato. Richiesta esperienza base nella ristorazione.",
+        requirements: ["Disponibilità oraria", "Abbigliamento formale", "Esperienza base"],
+        hourlyRate: Math.floor(Math.random() * 5) + 12,
+        duration: Math.floor(Math.random() * 2) + 4,
+      },
+      events: {
+        title: "Hostess/Steward per fiera",
+        company: "EventiMilano",
+        description: "Accoglienza visitatori e supporto during eventi fieristici o congressi.",
+        requirements: ["Bella presenza", "Inglese base", "Flessibilità oraria"],
+        hourlyRate: Math.floor(Math.random() * 4) + 11,
+        duration: Math.floor(Math.random() * 3) + 6,
+      },
+      other: {
+        title: "Dog sitter",
+        company: "PetCare Milano",
+        description: "Passeggiata e cura di cani in zona Milano. Esperienza con animali gradita.",
+        requirements: ["Amante degli animali", "Affidabilità", "Pazienza"],
+        hourlyRate: Math.floor(Math.random() * 3) + 10,
+        duration: Math.floor(Math.random() * 2) + 2,
+      },
+      retail: {
+        title: "Commesso/a negozio",
+        company: "Shopping Milano",
+        description: "Assistenza clienti e gestione cassa in negozio di abbigliamento.",
+        requirements: ["Orientamento al cliente", "Flessibilità", "Esperienza retail gradita"],
+        hourlyRate: Math.floor(Math.random() * 4) + 9,
+        duration: Math.floor(Math.random() * 3) + 4,
+      },
+      tutoring: {
+        title: "Tutor materie scientifiche",
+        company: "StudyHelp",
+        description: "Lezioni private di matematica, fisica o scienze per studenti.",
+        requirements: ["Laurea in corso", "Pazienza", "Capacità di spiegazione"],
+        hourlyRate: Math.floor(Math.random() * 5) + 15,
+        duration: 2,
+      },
+      delivery: {
+        title: "Rider consegne",
+        company: "FastDelivery",
+        description: "Consegne in zona Milano con proprio mezzo. Orari flessibili.",
+        requirements: ["Mezzo proprio", "Conoscenza della città", "Puntualità"],
+        hourlyRate: Math.floor(Math.random() * 3) + 11,
+        duration: Math.floor(Math.random() * 2) + 3,
+      },
+      office: {
+        title: "Supporto amministrativo",
+        company: "Business Center",
+        description: "Lavoro d'ufficio base, inserimento dati e archivio documenti.",
+        requirements: ["Uso PC", "Precisione", "Italiano ottimo"],
+        hourlyRate: Math.floor(Math.random() * 4) + 10,
+        duration: Math.floor(Math.random() * 3) + 4,
+      },
+      customer_service: {
+        title: "Operatore customer care",
+        company: "ServiceHub",
+        description: "Assistenza clienti via telefono o chat per azienda di servizi.",
+        requirements: ["Ottime doti comunicative", "Problem solving", "Pazienza"],
+        hourlyRate: Math.floor(Math.random() * 3) + 10,
+        duration: Math.floor(Math.random() * 2) + 4,
+      }
+    };
+
+    const template = jobTemplates[randomCategory];
+    
+    return {
+      id: `generated-${date}-${timeSlot}-${Math.random().toString(36).substring(7)}`,
+      category: randomCategory,
+      location: "Milano",
+      date: date,
+      timeSlot: timeSlot,
+      applicationUrl: `/job/${date}-${timeSlot}`,
+      ...template
+    } as JobListing;
+  };
+
   const handleAvailabilitySubmit = (formData: {
     availability: DayAvailability[];
     monthlyGoal: number;
     preferredCategories: JobCategory[];
   }) => {
-    // Track calendar creation event
     trackCalendarCreation(
       formData.availability.length,
       formData.availability.reduce((total, day) => total + day.availableSlots.length, 0),
       formData.monthlyGoal
     );
 
-    // Generate jobs for each available time slot
     let generatedJobs: JobListing[] = [];
     
     formData.availability.forEach(dayAvailability => {
       dayAvailability.availableSlots.forEach(timeSlot => {
-        // Create a sample job for each time slot
-        const timeSlotDetails = timeSlots.find(slot => slot.id === timeSlot);
-        const jobIndex = Math.floor(Math.random() * mockJobs.length);
-        const templateJob = mockJobs[jobIndex];
-        const categoryJobs = mockJobs.filter(job => 
-          formData.preferredCategories.includes(job.category)
+        const newJob = generateJobFromTemplate(
+          dayAvailability.date,
+          timeSlot,
+          formData.preferredCategories
         );
-        
-        // Use a job from preferred categories if available, otherwise use a random job
-        const baseJob = categoryJobs.length > 0 
-          ? categoryJobs[Math.floor(Math.random() * categoryJobs.length)] 
-          : templateJob;
-        
-        // Create a new job based on the template but with the user's selected date and time slot
-        const newJob: JobListing = {
-          ...baseJob,
-          id: `generated-${dayAvailability.date}-${timeSlot}-${Math.random().toString(36).substring(7)}`,
-          date: dayAvailability.date,
-          timeSlot: timeSlot,
-          hourlyRate: Math.floor(Math.random() * 10) + 10, // Random rate between 10-20€
-        };
-        
         generatedJobs.push(newJob);
       });
     });
 
-    // Calculate total earnings
     const totalEarnings = generatedJobs.reduce((sum, job) => 
       sum + (job.hourlyRate * job.duration), 0
     );
@@ -92,7 +154,6 @@ const Calendar = () => {
     setAcceptedJobs([]);
     setRejectedJobs([]);
 
-    // Track successful calendar generation
     trackEvent('Calendar', 'Generate', 'Success', generatedJobs.length);
 
     toast({
@@ -100,7 +161,6 @@ const Calendar = () => {
       description: `Abbiamo trovato ${generatedJobs.length} opportunità in base alle tue preferenze.`,
     });
     
-    // Debug log
     console.log("Generated jobs:", generatedJobs);
   };
   
@@ -137,7 +197,6 @@ const Calendar = () => {
   
   const handleJobToggle = (jobId: string, accept: boolean) => {
     if (accept) {
-      // If accepting, add to accepted and remove from rejected if present
       setAcceptedJobs(prev => [...prev.filter(id => id !== jobId), jobId]);
       setRejectedJobs(prev => prev.filter(id => id !== jobId));
       trackEvent('Calendar', 'Accept', jobId);
@@ -146,7 +205,6 @@ const Calendar = () => {
         description: "Hai accettato questa opportunità di lavoro.",
       });
     } else {
-      // If rejecting, add to rejected and remove from accepted if present
       setRejectedJobs(prev => [...prev.filter(id => id !== jobId), jobId]);
       setAcceptedJobs(prev => prev.filter(id => id !== jobId));
       trackEvent('Calendar', 'Reject', jobId);
@@ -158,7 +216,7 @@ const Calendar = () => {
   };
   
   if (!authenticated) {
-    return null; // Will redirect via useEffect
+    return null;
   }
   
   return (
