@@ -81,7 +81,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
                     {day.getDate()}
                   </div>
                   
-                  <div className="mt-1 space-y-1">
+                  <div className="mt-1 space-y-1 max-h-[100px] overflow-y-auto">
                     {dayJobs.map((job) => {
                       const timeSlot = timeSlots.find(slot => slot.id === job.timeSlot);
                       const categoryColor = categoryColors[job.category] || categoryColors.other;
@@ -90,12 +90,19 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
                       return (
                         <div
                           key={job.id}
-                          className={`text-xs p-1 rounded ${categoryColor} transition-all hover:opacity-90 cursor-pointer`}
+                          className={`
+                            text-xs p-1 rounded ${categoryColor} 
+                            transition-all hover:opacity-90 cursor-pointer
+                            animate-fade-in
+                          `}
                           title={`${job.title} - ${job.company} - ${job.hourlyRate}€/ora`}
                         >
                           <div className="font-medium truncate">{job.title}</div>
-                          <div>{timeSlot?.timeRange} • {job.duration} {durationText} • {job.hourlyRate}€/h</div>
-                          <div className="truncate text-[10px]">{job.company}</div>
+                          <div className="text-[10px] opacity-90">
+                            {timeSlot?.timeRange} • {job.duration} {durationText}
+                          </div>
+                          <div className="text-[10px] truncate opacity-90">{job.company}</div>
+                          <div className="text-[10px] font-medium">{job.hourlyRate}€/h</div>
                         </div>
                       );
                     })}

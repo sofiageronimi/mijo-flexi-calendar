@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -43,52 +42,56 @@ const Calendar = () => {
     monthlyGoal: number;
     preferredCategories: JobCategory[];
   }) => {
-    // In a real app, this would make an API call to generate a personalized calendar
-    
     // Track calendar creation event
     trackCalendarCreation(
       formData.availability.length,
       formData.availability.reduce((total, day) => total + day.availableSlots.length, 0),
       formData.monthlyGoal
     );
+
+    // Generate one job per available time slot
+    let generatedJobs: JobListing[] = [];
     
-    // Mock implementation: filter jobs based on preferences and availability
-    const availableDates = formData.availability.map(a => a.date);
-    
-    // Filter jobs by preferred categories and dates
-    let filteredJobs = mockJobs.filter(job => {
-      // Check if job is on an available date
-      const jobOnAvailableDate = availableDates.includes(job.date);
-      // Check if job is in preferred categories
-      const jobInPreferredCategory = formData.preferredCategories.includes(job.category);
-      return jobOnAvailableDate && jobInPreferredCategory;
+    formData.availability.forEach(dayAvailability => {
+      dayAvailability.availableSlots.forEach(slot => {
+        // Filter jobs for this date and preferred categories
+        const availableJobs = mockJobs.filter(job => 
+          job.date === dayAvailability.date &&
+          formData.preferredCategories.includes(job.category)
+        );
+
+        // If there are jobs available for this slot, pick the highest paying one
+        if (availableJobs.length > 0) {
+          const bestJob = [...availableJobs].sort((a, b) => b.hourlyRate - a.hourlyRate)[0];
+          generatedJobs.push({
+            ...bestJob,
+            timeSlot: slot // Assign the job to this specific time slot
+          });
+        }
+      });
     });
-    
-    // Check if job time slot matches availability for that day
-    filteredJobs = filteredJobs.filter(job => {
-      const dayAvailability = formData.availability.find(a => a.date === job.date);
-      return dayAvailability?.availableSlots.includes(job.timeSlot);
-    });
-    
-    // Sort by hourly rate to maximize earnings (if we have enough jobs)
-    filteredJobs.sort((a, b) => b.hourlyRate - a.hourlyRate);
-    
+
+    // Sort by hourly rate
+    generatedJobs.sort((a, b) => b.hourlyRate - a.hourlyRate);
+
     // Calculate total earnings
-    const totalEarnings = filteredJobs.reduce((sum, job) => sum + (job.hourlyRate * job.duration), 0);
-    
-    setGeneratedCalendar(filteredJobs);
+    const totalEarnings = generatedJobs.reduce((sum, job) => 
+      sum + (job.hourlyRate * job.duration), 0
+    );
+
+    setGeneratedCalendar(generatedJobs);
     setMonthlyGoal(formData.monthlyGoal);
     setEstimatedEarnings(totalEarnings);
     setShowCalendar(true);
     setAcceptedJobs([]);
     setRejectedJobs([]);
-    
+
     // Track successful calendar generation
-    trackEvent('Calendar', 'Generate', 'Success', filteredJobs.length);
-    
+    trackEvent('Calendar', 'Generate', 'Success', generatedJobs.length);
+
     toast({
       title: "Calendario generato",
-      description: `Abbiamo trovato ${filteredJobs.length} opportunità in base alle tue preferenze.`,
+      description: `Abbiamo trovato ${generatedJobs.length} opportunità in base alle tue preferenze.`,
     });
   };
   
