@@ -8,6 +8,7 @@ import CalendarGrid from '@/components/CalendarGrid';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Check, X } from "lucide-react";
 import { DayAvailability, JobCategory, JobListing } from '@/lib/types';
 import { mockJobs, isAuthenticated } from '@/lib/data';
 import { toast } from '@/hooks/use-toast';
@@ -18,6 +19,8 @@ const Calendar = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [monthlyGoal, setMonthlyGoal] = useState(0);
   const [estimatedEarnings, setEstimatedEarnings] = useState(0);
+  const [acceptedJobs, setAcceptedJobs] = useState<string[]>([]);
+  const [rejectedJobs, setRejectedJobs] = useState<string[]>([]);
   const navigate = useNavigate();
   const authenticated = isAuthenticated();
   
@@ -77,6 +80,8 @@ const Calendar = () => {
     setMonthlyGoal(formData.monthlyGoal);
     setEstimatedEarnings(totalEarnings);
     setShowCalendar(true);
+    setAcceptedJobs([]);
+    setRejectedJobs([]);
     
     // Track successful calendar generation
     trackEvent('Calendar', 'Generate', 'Success', filteredJobs.length);
@@ -90,16 +95,54 @@ const Calendar = () => {
   const resetCalendar = () => {
     setShowCalendar(false);
     setGeneratedCalendar([]);
+    setAcceptedJobs([]);
+    setRejectedJobs([]);
     trackEvent('Calendar', 'Reset', 'User initiated');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  const handleJobApplication = (jobId: string) => {
-    trackEvent('Calendar', 'Apply', jobId);
+  const handleAcceptCalendar = () => {
+    const allJobIds = generatedCalendar.map(job => job.id);
+    setAcceptedJobs(allJobIds);
+    setRejectedJobs([]);
+    trackEvent('Calendar', 'Accept', 'All jobs');
     toast({
-      title: "Candidatura inviata",
-      description: "La tua candidatura è stata inviata con successo.",
+      title: "Calendario accettato",
+      description: "Hai accettato tutte le opportunità del calendario.",
     });
+  };
+  
+  const handleRejectCalendar = () => {
+    const allJobIds = generatedCalendar.map(job => job.id);
+    setRejectedJobs(allJobIds);
+    setAcceptedJobs([]);
+    trackEvent('Calendar', 'Reject', 'All jobs');
+    toast({
+      title: "Calendario rifiutato",
+      description: "Hai rifiutato tutte le opportunità del calendario.",
+    });
+  };
+  
+  const handleJobToggle = (jobId: string, accept: boolean) => {
+    if (accept) {
+      // If accepting, add to accepted and remove from rejected if present
+      setAcceptedJobs(prev => [...prev.filter(id => id !== jobId), jobId]);
+      setRejectedJobs(prev => prev.filter(id => id !== jobId));
+      trackEvent('Calendar', 'Accept', jobId);
+      toast({
+        title: "Opportunità accettata",
+        description: "Hai accettato questa opportunità di lavoro.",
+      });
+    } else {
+      // If rejecting, add to rejected and remove from accepted if present
+      setRejectedJobs(prev => [...prev.filter(id => id !== jobId), jobId]);
+      setAcceptedJobs(prev => prev.filter(id => id !== jobId));
+      trackEvent('Calendar', 'Reject', jobId);
+      toast({
+        title: "Opportunità rifiutata",
+        description: "Hai rifiutato questa opportunità di lavoro.",
+      });
+    }
   };
   
   if (!authenticated) {
@@ -128,9 +171,24 @@ const Calendar = () => {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-2xl font-semibold">Il tuo calendario</h2>
-                      <Button variant="outline" onClick={resetCalendar}>
-                        Modifica preferenze
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button variant="outline" onClick={resetCalendar}>
+                          Modifica preferenze
+                        </Button>
+                        <Button 
+                          variant="default" 
+                          className="bg-green-500 hover:bg-green-600"
+                          onClick={handleAcceptCalendar}
+                        >
+                          <Check className="mr-1" /> Accetta tutto
+                        </Button>
+                        <Button 
+                          variant="destructive"
+                          onClick={handleRejectCalendar}
+                        >
+                          <X className="mr-1" /> Rifiuta tutto
+                        </Button>
+                      </div>
                     </div>
                     
                     <CalendarGrid 
@@ -179,6 +237,13 @@ const Calendar = () => {
                           {generatedCalendar.reduce((sum, job) => sum + job.duration, 0)} ore
                         </p>
                       </div>
+                      
+                      <div className="pt-4 mt-4 border-t">
+                        <p className="font-medium">Stato opportunità</p>
+                        <p className="text-sm">Accettate: {acceptedJobs.length}</p>
+                        <p className="text-sm">Rifiutate: {rejectedJobs.length}</p>
+                        <p className="text-sm">In attesa: {generatedCalendar.length - acceptedJobs.length - rejectedJobs.length}</p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -195,27 +260,70 @@ const Calendar = () => {
                     <div className="bg-white rounded-lg shadow-sm p-6">
                       {generatedCalendar.length > 0 ? (
                         <div className="space-y-4">
-                          {generatedCalendar.map(job => (
-                            <div key={job.id} className="flex items-center justify-between border-b pb-4">
-                              <div>
-                                <h3 className="font-semibold">{job.title}</h3>
-                                <p className="text-gray-600 text-sm">{job.company} • {job.location}</p>
-                                <p className="text-gray-600 text-sm">
-                                  {new Date(job.date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })} • {job.duration} ore
-                                </p>
+                          {generatedCalendar.map(job => {
+                            const isAccepted = acceptedJobs.includes(job.id);
+                            const isRejected = rejectedJobs.includes(job.id);
+                            
+                            return (
+                              <div key={job.id} className={`flex items-center justify-between border-b pb-4 ${
+                                isRejected ? 'opacity-60' : ''
+                              }`}>
+                                <div>
+                                  <h3 className="font-semibold">{job.title}</h3>
+                                  <p className="text-gray-600 text-sm">{job.company} • {job.location}</p>
+                                  <p className="text-gray-600 text-sm">
+                                    {new Date(job.date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })} • {job.duration} ore
+                                  </p>
+                                  {isAccepted && (
+                                    <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded mt-1">
+                                      ✓ Accettato
+                                    </span>
+                                  )}
+                                  {isRejected && (
+                                    <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded mt-1">
+                                      ✗ Rifiutato
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-right">
+                                  <p className="font-medium text-mijob-orange">{job.hourlyRate}€/ora</p>
+                                  <div className="flex space-x-2 mt-2">
+                                    {!isAccepted && !isRejected ? (
+                                      <>
+                                        <Button 
+                                          size="sm"
+                                          variant="outline"
+                                          className="border-green-500 text-green-500 hover:bg-green-50"
+                                          onClick={() => handleJobToggle(job.id, true)}
+                                        >
+                                          <Check className="h-4 w-4 mr-1" /> Accetta
+                                        </Button>
+                                        <Button 
+                                          size="sm"
+                                          variant="outline"
+                                          className="border-red-500 text-red-500 hover:bg-red-50"
+                                          onClick={() => handleJobToggle(job.id, false)}
+                                        >
+                                          <X className="h-4 w-4 mr-1" /> Rifiuta
+                                        </Button>
+                                      </>
+                                    ) : (
+                                      <Button 
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => {
+                                          setAcceptedJobs(prev => prev.filter(id => id !== job.id));
+                                          setRejectedJobs(prev => prev.filter(id => id !== job.id));
+                                        }}
+                                      >
+                                        Annulla
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                              <div className="text-right">
-                                <p className="font-medium text-mijob-orange">{job.hourlyRate}€/ora</p>
-                                <Button 
-                                  size="sm" 
-                                  className="mt-2"
-                                  onClick={() => handleJobApplication(job.id)}
-                                >
-                                  Candidati
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       ) : (
                         <div className="text-center py-8">
