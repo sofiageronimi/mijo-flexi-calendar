@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check, X } from "lucide-react";
 import { DayAvailability, JobCategory, JobListing } from '@/lib/types';
-import { mockJobs, isAuthenticated } from '@/lib/data';
+import { mockJobs, isAuthenticated, timeSlots } from '@/lib/data';
 import { toast } from '@/hooks/use-toast';
 import { trackPageView, trackEvent, trackCalendarCreation } from '@/lib/analytics';
 
@@ -49,30 +49,36 @@ const Calendar = () => {
       formData.monthlyGoal
     );
 
-    // Generate one job per available time slot
+    // Generate jobs for each available time slot
     let generatedJobs: JobListing[] = [];
     
     formData.availability.forEach(dayAvailability => {
-      dayAvailability.availableSlots.forEach(slot => {
-        // Filter jobs for this date and preferred categories
-        const availableJobs = mockJobs.filter(job => 
-          job.date === dayAvailability.date &&
+      dayAvailability.availableSlots.forEach(timeSlot => {
+        // Create a sample job for each time slot
+        const timeSlotDetails = timeSlots.find(slot => slot.id === timeSlot);
+        const jobIndex = Math.floor(Math.random() * mockJobs.length);
+        const templateJob = mockJobs[jobIndex];
+        const categoryJobs = mockJobs.filter(job => 
           formData.preferredCategories.includes(job.category)
         );
-
-        // If there are jobs available for this slot, pick the highest paying one
-        if (availableJobs.length > 0) {
-          const bestJob = [...availableJobs].sort((a, b) => b.hourlyRate - a.hourlyRate)[0];
-          generatedJobs.push({
-            ...bestJob,
-            timeSlot: slot // Assign the job to this specific time slot
-          });
-        }
+        
+        // Use a job from preferred categories if available, otherwise use a random job
+        const baseJob = categoryJobs.length > 0 
+          ? categoryJobs[Math.floor(Math.random() * categoryJobs.length)] 
+          : templateJob;
+        
+        // Create a new job based on the template but with the user's selected date and time slot
+        const newJob: JobListing = {
+          ...baseJob,
+          id: `generated-${dayAvailability.date}-${timeSlot}-${Math.random().toString(36).substring(7)}`,
+          date: dayAvailability.date,
+          timeSlot: timeSlot,
+          hourlyRate: Math.floor(Math.random() * 10) + 10, // Random rate between 10-20€
+        };
+        
+        generatedJobs.push(newJob);
       });
     });
-
-    // Sort by hourly rate
-    generatedJobs.sort((a, b) => b.hourlyRate - a.hourlyRate);
 
     // Calculate total earnings
     const totalEarnings = generatedJobs.reduce((sum, job) => 
@@ -93,6 +99,9 @@ const Calendar = () => {
       title: "Calendario generato",
       description: `Abbiamo trovato ${generatedJobs.length} opportunità in base alle tue preferenze.`,
     });
+    
+    // Debug log
+    console.log("Generated jobs:", generatedJobs);
   };
   
   const resetCalendar = () => {

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobListing } from '@/lib/types';
@@ -43,6 +44,10 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
     other: 'bg-gray-500 text-white'
   };
 
+  // Debug logs
+  console.log("CalendarGrid received jobs:", jobs);
+  console.log("Month:", month);
+
   return (
     <div className="mt-6">
       <Card className="border rounded-lg overflow-hidden">
@@ -82,30 +87,37 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ month, jobs }) => {
                   </div>
                   
                   <div className="mt-1 space-y-1 max-h-[100px] overflow-y-auto">
-                    {dayJobs.map((job) => {
-                      const timeSlot = timeSlots.find(slot => slot.id === job.timeSlot);
-                      const categoryColor = categoryColors[job.category] || categoryColors.other;
-                      const durationText = job.duration === 1 ? 'ora' : 'ore';
-                      
-                      return (
-                        <div
-                          key={job.id}
-                          className={`
-                            text-xs p-1 rounded ${categoryColor} 
-                            transition-all hover:opacity-90 cursor-pointer
-                            animate-fade-in
-                          `}
-                          title={`${job.title} - ${job.company} - ${job.hourlyRate}€/ora`}
-                        >
-                          <div className="font-medium truncate">{job.title}</div>
-                          <div className="text-[10px] opacity-90">
-                            {timeSlot?.timeRange} • {job.duration} {durationText}
+                    {dayJobs && dayJobs.length > 0 ? (
+                      dayJobs.map((job) => {
+                        const timeSlot = timeSlots.find(slot => slot.id === job.timeSlot);
+                        const categoryColor = categoryColors[job.category] || categoryColors.other;
+                        const durationText = job.duration === 1 ? 'ora' : 'ore';
+                        
+                        return (
+                          <div
+                            key={job.id}
+                            className={`
+                              text-xs p-1 rounded ${categoryColor} 
+                              transition-all hover:opacity-90 cursor-pointer
+                              animate-fade-in
+                            `}
+                            title={`${job.title} - ${job.company} - ${job.hourlyRate}€/ora`}
+                          >
+                            <div className="font-medium truncate">{job.title}</div>
+                            <div className="text-[10px] opacity-90">
+                              {timeSlot?.timeRange || ''} • {job.duration} {durationText}
+                            </div>
+                            <div className="text-[10px] truncate opacity-90">{job.company}</div>
+                            <div className="text-[10px] font-medium">{job.hourlyRate}€/h</div>
                           </div>
-                          <div className="text-[10px] truncate opacity-90">{job.company}</div>
-                          <div className="text-[10px] font-medium">{job.hourlyRate}€/h</div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    ) : (
+                      // This message will only appear for days with no jobs
+                      <div className="text-[10px] text-gray-400 text-center mt-2">
+                        Nessun lavoro
+                      </div>
+                    )}
                   </div>
                 </div>
               );
