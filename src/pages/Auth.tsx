@@ -20,110 +20,93 @@ const Auth = () => {
   const [registerPassword, setRegisterPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
-  
+
   const navigate = useNavigate();
-  
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!loginEmail || !loginPassword) {
-      toast({
-        title: "Errore",
-        description: "Inserisci email e password",
-        variant: "destructive",
-      });
+      toast({ title: 'Errore', description: 'Inserisci email e password', variant: 'destructive' });
       return;
     }
-    
+
     setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // Save user data to localStorage
-      const userData = {
-        email: loginEmail,
-        name: 'Utente MiJob',
-      };
-      
+
+    try {
+      // Simulazione login (in realtà dovresti usare una chiamata API)
+      const userData = { email: loginEmail, name: 'Utente MiJob' };
       localStorage.setItem('mijob_authenticated', 'true');
       localStorage.setItem('mijob_user', JSON.stringify(userData));
-      
-      // Track login event
+
       trackEvent('auth', 'login', loginEmail);
-      
-      setLoading(false);
-      toast({
-        title: "Accesso effettuato",
-        description: "Benvenuto su MiJob!",
-      });
+
+      toast({ title: 'Accesso effettuato', description: 'Benvenuto su MiJob!' });
       navigate('/profile');
-    }, 1500);
+    } catch (err) {
+      toast({ title: 'Errore', description: 'Errore durante l\'accesso', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
   };
-  
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!registerFirstName || !registerLastName || !registerEmail || !registerPassword || !confirmPassword) {
-      toast({
-        title: "Errore",
-        description: "Compila tutti i campi richiesti",
-        variant: "destructive",
-      });
+      toast({ title: 'Errore', description: 'Compila tutti i campi richiesti', variant: 'destructive' });
       return;
     }
-    
+
     if (registerPassword !== confirmPassword) {
-      toast({
-        title: "Errore",
-        description: "Le password non coincidono",
-        variant: "destructive",
-      });
+      toast({ title: 'Errore', description: 'Le password non coincidono', variant: 'destructive' });
       return;
     }
-    
+
     if (!agreeTerms) {
       toast({
-        title: "Errore",
-        description: "Devi accettare i termini di servizio e l'informativa sulla privacy",
-        variant: "destructive",
+        title: 'Errore',
+        description: 'Devi accettare i termini di servizio e l\'informativa sulla privacy',
+        variant: 'destructive'
       });
       return;
     }
-    
+
     setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // Save user data to localStorage
+
+    try {
+      // Simulazione registrazione a chiamata API)
       const userData = {
         email: registerEmail,
         name: `${registerFirstName} ${registerLastName}`,
       };
-      
       localStorage.setItem('mijob_authenticated', 'true');
       localStorage.setItem('mijob_user', JSON.stringify(userData));
-      
-      // Push registration event to dataLayer
+
+      // Tracciamento conforme GDPR dopo accettazione termini
       if (window.dataLayer) {
         window.dataLayer.push({
           event: 'registrazione_completata',
           user_registration_data: {
             nome: registerFirstName,
             cognome: registerLastName,
-            email: registerEmail
-          }
+            email: registerEmail,
+          },
         });
       }
-      
-      setLoading(false);
+
       toast({
-        title: "Registrazione completata",
-        description: "Benvenuto su MiJob! Ora puoi iniziare a creare il tuo calendario personalizzato.",
+        title: 'Registrazione completata',
+        description: 'Benvenuto su MiJob! Ora puoi iniziare a creare il tuo calendario personalizzato.'
       });
       navigate('/profile');
-    }, 1500);
+    } catch (err) {
+      toast({ title: 'Errore', description: 'Errore durante la registrazione', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
