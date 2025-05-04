@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TeamMember from '@/components/TeamMember';
 import { teamMembers } from '@/lib/data';
+import { UserRound, Users } from 'lucide-react';
 
 const AboutUs = () => {
   return (
@@ -37,12 +38,10 @@ const AboutUs = () => {
                   Tutto è iniziato quando, da studenti con le tasche vuote, abbiamo sperimentato in prima persona la difficoltà di trovare lavoretti che si adattassero ai nostri orari universitari. Così è nato MiJob, una piattaforma pensata per chi, come noi, cerca opportunità lavorative davvero flessibili.
                 </p>
               </div>
-              <div className="md:w-1/2">
-                <img 
-                  src="https://i.pravatar.cc/400?img=15" 
-                  alt="Il team di MiJob" 
-                  className="rounded-lg shadow-lg w-full"
-                />
+              <div className="md:w-1/2 flex justify-center">
+                <div className="w-64 h-64 bg-mijob-lavender/10 rounded-full flex items-center justify-center">
+                  <Users size={128} className="text-mijob-lavender" />
+                </div>
               </div>
             </div>
           </div>
@@ -100,12 +99,10 @@ const AboutUs = () => {
         <section className="py-16 md:py-20 bg-mijob-lavender/10">
           <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center gap-10">
-              <div className="md:w-1/2 order-2 md:order-1">
-                <img 
-                  src="https://i.pravatar.cc/400?img=16" 
-                  alt="La visione di MiJob" 
-                  className="rounded-lg shadow-lg w-full"
-                />
+              <div className="md:w-1/2 order-2 md:order-1 flex justify-center">
+                <div className="w-64 h-64 bg-mijob-blue/10 rounded-full flex items-center justify-center">
+                  <UserRound size={128} className="text-mijob-blue" />
+                </div>
               </div>
               <div className="md:w-1/2 order-1 md:order-2">
                 <h2 className="text-3xl font-bold mb-6">La nostra visione</h2>

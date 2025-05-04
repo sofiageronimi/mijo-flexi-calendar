@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, UserRound } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -160,11 +160,9 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <div className="flex items-center mb-4">
-                  <img 
-                    src="https://i.pravatar.cc/300?img=10" 
-                    alt="Testimonial" 
-                    className="w-12 h-12 rounded-full mr-3" 
-                  />
+                  <div className="w-12 h-12 rounded-full bg-mijob-lavender/10 flex items-center justify-center mr-3">
+                    <UserRound className="text-mijob-lavender" size={24} />
+                  </div>
                   <div>
                     <h4 className="font-semibold">Alessandro M.</h4>
                     <p className="text-sm text-gray-500">Studente di Economia</p>
@@ -176,11 +174,9 @@ const Index = () => {
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <div className="flex items-center mb-4">
-                  <img 
-                    src="https://i.pravatar.cc/300?img=11" 
-                    alt="Testimonial" 
-                    className="w-12 h-12 rounded-full mr-3" 
-                  />
+                  <div className="w-12 h-12 rounded-full bg-mijob-lavender/10 flex items-center justify-center mr-3">
+                    <UserRound className="text-mijob-lavender" size={24} />
+                  </div>
                   <div>
                     <h4 className="font-semibold">Giulia B.</h4>
                     <p className="text-sm text-gray-500">Studentessa di Ingegneria</p>
@@ -192,11 +188,9 @@ const Index = () => {
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <div className="flex items-center mb-4">
-                  <img 
-                    src="https://i.pravatar.cc/300?img=12" 
-                    alt="Testimonial" 
-                    className="w-12 h-12 rounded-full mr-3" 
-                  />
+                  <div className="w-12 h-12 rounded-full bg-mijob-lavender/10 flex items-center justify-center mr-3">
+                    <UserRound className="text-mijob-lavender" size={24} />
+                  </div>
                   <div>
                     <h4 className="font-semibold">Matteo P.</h4>
                     <p className="text-sm text-gray-500">Studente di Medicina</p>
