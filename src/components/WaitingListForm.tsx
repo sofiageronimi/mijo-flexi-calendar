@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { Check } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const WaitingListForm = () => {
   const [email, setEmail] = useState('');
@@ -26,29 +27,42 @@ const WaitingListForm = () => {
     setIsLoading(true);
     
     try {
-      // In assenza di Supabase, useremo una soluzione temporanea
-      const response = await fetch("https://formsubmit.co/ajax/info.mijob@gmail.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          subject: "Nuova iscrizione alla waiting list MiJob",
-          message: `Nuova email per la waiting list: ${email}`
-        })
-      });
+      // Insert email into Supabase
+      const { error } = await supabase
+        .from('waiting_list')
+        .insert([{ email }]);
 
-      if (response.ok) {
+      if (error) {
+        if (error.code === '23505') { // Unique violation code
+          toast({
+            title: "Attenzione",
+            description: "Questa email è già registrata nella waiting list.",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
+      } else {
         setIsSuccess(true);
         setEmail('');
         toast({
           title: "Grazie!",
           description: "Ti abbiamo aggiunto alla waiting list.",
         });
-      } else {
-        throw new Error('Errore nell\'invio dell\'email');
+        
+        // Send notification email to admin using FormSubmit as fallback for notifications
+        await fetch("https://formsubmit.co/ajax/info.mijob@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            email: email,
+            subject: "Nuova iscrizione alla waiting list MiJob",
+            message: `Nuova email per la waiting list: ${email}`
+          })
+        });
       }
     } catch (error) {
       console.error("Errore durante l'invio:", error);

@@ -57,6 +57,13 @@ const Index = () => {
           </div>
         </section>
         
+        {/* Waiting List Section - Moved here, right after the hero section */}
+        <section className="py-12 bg-gray-50">
+          <div className="max-w-3xl mx-auto px-4 md:px-6 lg:px-8">
+            <WaitingListForm />
+          </div>
+        </section>
+        
         {/* How it Works Section */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -146,13 +153,6 @@ const Index = () => {
                 <p className="text-gray-600">Riduci automaticamente gli impegni durante i periodi di esame.</p>
               </div>
             </div>
-          </div>
-        </section>
-        
-        {/* Waiting List Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-3xl mx-auto px-4 md:px-6 lg:px-8">
-            <WaitingListForm />
           </div>
         </section>
         
