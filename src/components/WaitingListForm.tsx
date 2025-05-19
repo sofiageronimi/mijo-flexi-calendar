@@ -77,7 +77,7 @@ const WaitingListForm = () => {
   };
 
   return (
-    <div className="rounded-xl p-6 md:p-8">
+    <div className="rounded-xl p-6 md:p-8 bg-black/30 backdrop-blur-sm border border-white/20 shadow-xl">
       <h3 className="text-xl font-semibold text-center mb-4 text-white">
         Ti piace il progetto? Lasciaci la tua email per entrare nella waiting list!
       </h3>
