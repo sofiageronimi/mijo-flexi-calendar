@@ -77,8 +77,8 @@ const WaitingListForm = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-      <h3 className="text-xl font-semibold text-center mb-4">
+    <div className="rounded-xl p-6 md:p-8">
+      <h3 className="text-xl font-semibold text-center mb-4 text-white">
         Ti piace il progetto? Lasciaci la tua email per entrare nella waiting list!
       </h3>
       
@@ -87,7 +87,7 @@ const WaitingListForm = () => {
           <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
             <Check size={24} />
           </div>
-          <p className="text-lg font-medium">Grazie! Ti abbiamo aggiunto alla waiting list.</p>
+          <p className="text-lg font-medium text-white">Grazie! Ti abbiamo aggiunto alla waiting list.</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
