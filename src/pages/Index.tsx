@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Sparkles, UserRound } from 'lucide-react';
+import WaitingListForm from '@/components/WaitingListForm';
 
 const Index = () => {
   return (
@@ -145,6 +146,13 @@ const Index = () => {
                 <p className="text-gray-600">Riduci automaticamente gli impegni durante i periodi di esame.</p>
               </div>
             </div>
+          </div>
+        </section>
+        
+        {/* Waiting List Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-3xl mx-auto px-4 md:px-6 lg:px-8">
+            <WaitingListForm />
           </div>
         </section>
         
