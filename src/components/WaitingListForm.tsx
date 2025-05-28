@@ -97,7 +97,7 @@ const WaitingListForm = () => {
               placeholder="La tua email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full"
+              className="w-full text-black placeholder:text-gray-400"
               required
             />
           </div>
